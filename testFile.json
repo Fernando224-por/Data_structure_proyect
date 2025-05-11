@@ -1,44 +1,98 @@
 {
-    "Puntos":[
-       {
-          "from":"A",
-          "to":"B",
-          "weight":4
-       },
-       {
-          "from":"A",
-          "to":"C",
-          "weight":2
-       },
-       {
-          "from":"B",
-          "to":"E",
-          "weight":3
-       },
-       {
-          "from":"C",
-          "to":"D",
-          "weight":2
-       },
-       {
-          "from":"C",
-          "to":"F",
-          "weight":4
-       },
-       {
-          "from":"D",
-          "to":"F",
-          "weight":1
-       },
-       {
-          "from":"E",
-          "to":"G",
-          "weight":2
-       },
-       {
-          "from":"F",
-          "to":"G",
-          "weight":1
-       }
-    ]
- }
+   "11_10_Bilbao": [
+      {
+         "from": "Portal_Suba",
+         "to": "San_Carlos_de_Suba",
+         "weight": 2.24
+      },
+      {
+         "from": "Parques_del_Campo",
+         "to": "San_Carlos_de_Suba",
+         "weight": 0.33
+      },
+      {
+         "from": "San_Carlos_de_Suba",
+         "to": "Bilbao_Sector_1",
+         "weight": 0.408
+      },
+      {
+         "from": "Bilbao_Sector_1",
+         "to": "Mi_Casa",
+         "weight": 0.26
+      }
+   ],
+   "C_104_Suba_Compartir": [
+      {
+         "from": "Portal_Suba",
+         "to": "AV_Suba_Kr_107",
+         "weight": 0.62
+      },
+      {
+         "from": "AV_Suba_Kr_107",
+         "to": "Cl_148_Kr_114_G",
+         "weight": 1.56
+      },
+      {
+         "from": "Cl_148_Kr_114_G",
+         "to": "Compartir_Suba",
+         "weight": 0.473
+      },
+      {
+         "from": "Compartir_Suba",
+         "to": "Kr_136A_DG_151",
+         "weight": 0.411
+      },
+      {
+         "from": "Kr_136A_DG_151",
+         "to": "Kr_136A_Cl_145",
+         "weight": 0.30
+      },
+      {
+         "from": "Kr_136A_Cl_145",
+         "to": "Cl_145_Kr_136_A",
+         "weight": 0.27
+      },
+      {
+         "from": "Cl_145_Kr_136_A",
+         "to": "Kr_136A_Cl_144",
+         "weight": 0.26
+      },
+      {
+         "from": "Kr_136A_Cl_144",
+         "to": "Vereda_Tibabuyes",
+         "weight": 0.62
+      },
+      {
+         "from": "Vereda_Tibabuyes",
+         "to": "Mi_Casa",
+         "weight": 0.22
+      }
+   ],
+   "11_2_San_Andres": [
+      {
+         "from": "Portal_Suba",
+         "to": "AV_Suba_Kr_107",
+         "weight": 0.62
+      },
+      {
+         "from": "AV_Suba_Kr_107",
+         "to": "Kr_128_Cl_144",
+         "weight": 1.25
+      },
+      {
+         "from": "Kr_128_Cl_144",
+         "to": "Cl_145_Kr_128",
+         "weight": 0.468
+      },
+      {
+         "from": "Cl_145_Kr_128",
+         "to": "Kr_136A_Cl_144",
+         "weight": 0.26
+      },
+      {
+         "from": "Kr_136A_Cl_144",
+         "to": "Mi_Casa",
+         "weight": 0.77
+      }
+   ]
+}
