@@ -12,31 +12,20 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import java.io.File;
+import java.io.IOException;
+
+import java.util.Random;
+
 /**
  *
  * @author andfe
  */
 public class simpleGraph {
 
-    private Map<String, Map<String, Double>> graph = new HashMap<>();
-
-    public void addNodes(String node) {
-        graph.putIfAbsent(node, new HashMap<>());
-    }
-
-    public void addEdges(String from, String to, Double weight) {
-        graph.putIfAbsent(to, new HashMap<>());
-        graph.putIfAbsent(from, new HashMap<>());
-
-        graph.get(to).put(from, weight);
-        graph.get(from).put(to, weight);
-    }
-
-    public void printGraph() {
-        for (String node : graph.keySet()) {
-            System.out.println("El nodo " + node + " esta unido a: " + graph.get(node));
-        }
-    }
+    Utilities tool = new Utilities();
 
     static class Node {
 
@@ -46,6 +35,118 @@ public class simpleGraph {
         Node(String name, Double priority) {
             this.name = name;
             this.priority = priority;
+        }
+    }
+
+    private Map<String, Map<String, Double>> graph = new HashMap<>();
+
+    private void addEdges(String from, String to, Double weight) {
+        graph.putIfAbsent(to, new HashMap<>());
+        graph.putIfAbsent(from, new HashMap<>());
+
+        graph.get(to).put(from, weight);
+        graph.get(from).put(to, weight);
+    }
+
+    public void graphByDistance(String fileName, String nameRoute) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        File myFile = new File(fileName);
+        if (myFile.exists()) {
+            JsonNode readJson = objectMapper.readTree(new File(fileName));
+
+            JsonNode Route = readJson.get(nameRoute);
+            System.out.println();
+            System.out.println("Paradas de la ruta " + nameRoute);
+            for (JsonNode stop : Route) {
+                String from = stop.get("from").asText();
+                String to = stop.get("to").asText();
+                Double weight = stop.get("weight").asDouble();
+
+                addEdges(from, to, weight);
+
+                System.out.println("Los nodos " + from + " a " + to + " con el peso " + weight + " Han sido añadidos");
+
+            }
+        } else {
+            System.out.println("El archivo no existe");
+        }
+    }
+
+    public void graphByTime(String fileName, String nameRoute) throws IOException {
+        Random r = new Random();
+        ObjectMapper objectMapper = new ObjectMapper();
+        File myFile = new File(fileName);
+        if (myFile.exists()) {
+            JsonNode readJson = objectMapper.readTree(new File(fileName));
+
+            JsonNode Route = readJson.get(nameRoute);
+            System.out.println();
+            System.out.println("Paradas de la ruta " + nameRoute);
+            for (JsonNode stop : Route) {
+                String from = stop.get("from").asText();
+                String to = stop.get("to").asText();
+                Double weight = tool.formatDecimal(r.nextDouble(8.0, 15.0));
+
+                addEdges(from, to, weight);
+
+                System.out.println("Los nodos " + from + " a " + to + " con el peso " + weight + " Han sido añadidos");
+
+            }
+        } else {
+            System.out.println("El archivo no existe");
+        }
+    }
+
+    public void graphByStop() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        File myFile = new File("testFileTwo.json");
+        if (myFile.exists()) {
+            JsonNode readJson = objectMapper.readTree(new File("testFileTwo.json"));
+
+            JsonNode Points = readJson.get("Puntos");
+            System.out.println();
+            for (JsonNode stop : Points) {
+                String from = stop.get("from").asText();
+                String to = stop.get("to").asText();
+                Double weight = stop.get("weight").asDouble();
+
+                addEdges(from, to, weight);
+
+                System.out.println("Los nodos " + from + " a " + to + " con el peso " + weight + " Han sido añadidos");
+
+            }
+        } else {
+            System.out.println("El archivo no existe");
+        }
+    }
+
+    public void graphByStopTime() throws IOException {
+        Random r = new Random();
+        ObjectMapper objectMapper = new ObjectMapper();
+        File myFile = new File("testFileTwo.json");
+        if (myFile.exists()) {
+            JsonNode readJson = objectMapper.readTree(new File("testFileTwo.json"));
+
+            JsonNode Points = readJson.get("Puntos");
+            System.out.println();
+            for (JsonNode stop : Points) {
+                String from = stop.get("from").asText();
+                String to = stop.get("to").asText();
+                Double weight = tool.formatDecimal(r.nextDouble(8.0, 15.0));
+
+                addEdges(from, to, weight);
+
+                System.out.println("Los nodos " + from + " a " + to + " con el peso " + weight + " Han sido añadidos");
+
+            }
+        } else {
+            System.out.println("El archivo no existe");
+        }
+    }
+
+    public void printGraph() {
+        for (String node : graph.keySet()) {
+            System.out.println("El nodo " + node + " esta unido a: " + graph.get(node));
         }
     }
 
@@ -76,7 +177,7 @@ public class simpleGraph {
                     path.add(0, step);
                     step = previus.get(step);
                 }
-                return new PathResult(path, distance.get(finalNode));
+                return new PathResult(path, tool.formatDecimal(distance.get(finalNode)));
             }
             if (distance.get(CurrentNode) == Double.MAX_VALUE) {
                 break;
@@ -95,14 +196,6 @@ public class simpleGraph {
         }
         return new PathResult(Collections.EMPTY_LIST, Double.MAX_VALUE);
 
-    }
-
-    public void sortResult(ArrayList<simpleGraph.PathResult> resultados) {
-        Collections.sort(resultados, Comparator.comparingDouble(r -> r.distance));
-        System.out.println("organizar rutas de menor a mayor");
-        for (simpleGraph.PathResult resultado : resultados) {
-            System.out.println(resultado);
-        }
     }
 
     static class PathResult {

@@ -7,80 +7,75 @@ package com.mycompany.graphwithhashmap;
  *
  * @author andfe
  */
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import java.util.Random;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class GraphWithHashMap {
 
     public static void main(String[] args) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        simpleGraph g = new simpleGraph();
-        simpleGraph g2 = new simpleGraph();
-        simpleGraph g3 = new simpleGraph();
 
-        File myFile = new File("testFile.json");
+        simpleGraph DistanceRouteOne = new simpleGraph();
+        simpleGraph DistanceRouteTwo = new simpleGraph();
+        simpleGraph DistanceRouteThree = new simpleGraph();
 
-        if (myFile.exists()) {
-            Random r = new Random();
-            JsonNode readJson = objectMapper.readTree(new File("testFile.json"));
+        Utilities a = new Utilities();
 
-            JsonNode RouteOne = readJson.get("11_10_Bilbao");
-            System.out.println("Paradas de la ruta 11-10 Bilbao");
-            for (JsonNode ubicacion : RouteOne) {
-                String from = ubicacion.get("from").asText();
-                String to = ubicacion.get("to").asText();
-                Double weight = ubicacion.get("weight").asDouble();
+        ArrayList<simpleGraph.PathResult> pathsDistance = new ArrayList<>();
 
-                g.addEdges(from, to, weight);
+        System.out.println("Evaluacion de rutas por Distancia");
+        DistanceRouteOne.graphByDistance("testFile.json", "11_10_Bilbao");
+        DistanceRouteTwo.graphByDistance("testFile.json", "C_104_Suba_Compartir");
+        DistanceRouteThree.graphByDistance("testFile.json", "11_2_San_Andres");
 
-                System.out.println("Los nodos " + from + " a " + to + " con el peso " + weight + " Han sido añadidos");
+        simpleGraph.PathResult resultTestOne = DistanceRouteOne.findShortestPath("Portal_Suba", "Mi_Casa");
 
-            }
-            JsonNode RouteTwo = readJson.get("C_104_Suba_Compartir");
-            System.out.println("Paradas de la ruta C104 Suba Compartir");
-            for (JsonNode ubicacion : RouteTwo) {
-                String from = ubicacion.get("from").asText();
-                String to = ubicacion.get("to").asText();
-                Double weight = ubicacion.get("weight").asDouble();
+        simpleGraph.PathResult resultTestTwo = DistanceRouteTwo.findShortestPath("Portal_Suba", "Mi_Casa");
 
-                g2.addEdges(from, to, weight);
+        simpleGraph.PathResult resultTestThree = DistanceRouteThree.findShortestPath("Portal_Suba", "Mi_Casa");
 
-                System.out.println("Los nodos " + from + " a " + to + " con el peso " + weight + " Han sido añadidos");
+        pathsDistance.add(resultTestOne);
+        pathsDistance.add(resultTestTwo);
+        pathsDistance.add(resultTestThree);
 
-            }
+        a.sortResult(pathsDistance);
 
-            JsonNode RouteThree = readJson.get("11_2_San_Andres");
-            System.out.println("Paradas de la ruta 11_2_San_Andres");
-            for (JsonNode ubicacion : RouteThree) {
-                String from = ubicacion.get("from").asText();
-                String to = ubicacion.get("to").asText();
-                Double weight = ubicacion.get("weight").asDouble();
+        pathsDistance.clear();
 
-                g3.addEdges(from, to, weight);
+        //evaluar rutas de manera individual (por tiempo)
+        simpleGraph TimeRouteOne = new simpleGraph();
+        simpleGraph TimeRouteTwo = new simpleGraph();
+        simpleGraph TimeRouteThree = new simpleGraph();
 
-                System.out.println("Los nodos " + from + " a " + to + " con el peso " + weight + " Han sido añadidos");
+        System.out.println("");
+        System.out.println("Evaluacion de rutas por Tiempo");
 
-            }
-        } else {
-            System.out.println("El archivo no existe");
-        }
+        TimeRouteOne.graphByTime("testFile.json", "11_10_Bilbao");
+        TimeRouteTwo.graphByTime("testFile.json", "C_104_Suba_Compartir");
+        TimeRouteThree.graphByTime("testFile.json", "11_2_San_Andres");
 
-        simpleGraph.PathResult resultTestOne = g.findShortestPath("Portal_Suba", "Mi_Casa");
+        simpleGraph.PathResult resultTimeRouteOne = TimeRouteOne.findShortestPath("Portal_Suba", "Mi_Casa");
 
-        simpleGraph.PathResult resultTestTwo = g2.findShortestPath("Portal_Suba", "Mi_Casa");
+        simpleGraph.PathResult resultTimeRouteTwo = TimeRouteTwo.findShortestPath("Portal_Suba", "Mi_Casa");
 
-        simpleGraph.PathResult resultTestThree = g3.findShortestPath("Portal_Suba", "Mi_Casa");
+        simpleGraph.PathResult resultTimeRouteThree = TimeRouteThree.findShortestPath("Portal_Suba", "Mi_Casa");
 
-        ArrayList<simpleGraph.PathResult> paths = new ArrayList<>();
+        pathsDistance.add(resultTimeRouteOne);
+        pathsDistance.add(resultTimeRouteTwo);
+        pathsDistance.add(resultTimeRouteThree);
 
-        paths.add(resultTestOne);
-        paths.add(resultTestTwo);
-        paths.add(resultTestThree);
+        a.sortResult(pathsDistance);
+        //evaluacion del trayecto 
+        simpleGraph diferentRoutesDistance = new simpleGraph();
+        simpleGraph diferentRoutesTime = new simpleGraph();
 
-        g.sortResult(paths);
+        diferentRoutesDistance.graphByStop();
+        diferentRoutesTime.graphByStopTime();
+
+        simpleGraph.PathResult resultDiferentDistance = diferentRoutesDistance.findShortestPath("Portal_Suba", "Mi_Casa");
+        System.out.println(resultDiferentDistance);
+
+        simpleGraph.PathResult resultDiferentTime = diferentRoutesTime.findShortestPath("Portal_Suba", "Mi_Casa");
+        System.out.println(resultDiferentTime);
+
     }
 }
